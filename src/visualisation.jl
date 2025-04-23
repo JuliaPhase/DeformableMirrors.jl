@@ -30,9 +30,9 @@ fig, ax, plot = pdmplot(PDM30_37)
 
 # Visualization with control values and custom settings
 controls = rand(num_actuators(PDM30_37)) .* 2 .- 1  # Random values between -1 and 1
-fig, ax, plot = pdmplot(PDM30_37, controls; 
-                        show_numbers=true, 
-                        colormap=:viridis, 
+fig, ax, plot = pdmplot(PDM30_37, controls;
+                        show_numbers=true,
+                        colormap=:viridis,
                         colorrange=(-0.5, 0.5))
 ```
 """
@@ -80,9 +80,9 @@ fig, ax, plot = mmdmplot(MMDM15_37)
 
 # Visualization with control values and custom settings
 controls = rand(num_actuators(MMDM15_37)) .* 2 .- 1  # Random values between -1 and 1
-fig, ax, plot = mmdmplot(MMDM15_37, controls; 
-                         show_numbers=true, 
-                         colormap=:viridis, 
+fig, ax, plot = mmdmplot(MMDM15_37, controls;
+                         show_numbers=true,
+                         colormap=:viridis,
                          colorrange=(-0.5, 0.5))
 ```
 """
@@ -96,3 +96,7 @@ Add a Micro-Machined Deformable Mirror (MMDM) visualization to an existing axis.
 See [`mmdmplot`](@ref) for full documentation of parameters and keyword arguments.
 """
 function mmdmplot! end
+
+
+function dmplot end
+function dmplot! end

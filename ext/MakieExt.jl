@@ -4,34 +4,34 @@ using Makie
 using GeometryBasics: Point2, Circle, decompose, Polygon
 using DeformableMirrors
 
-import DeformableMirrors: pdmplot, pdmplot!, mmdmplot, mmdmplot!
+import DeformableMirrors: pdmplot, pdmplot!, mmdmplot, mmdmplot!, dmplot, dmplot!
 import Makie: Colorbar
 
 
 
 # Define a plotting recipe for PDM
 @recipe(PDMPlot, pdm, controls) do scene
-    Attributes(
+    Attributes(;
         show_numbers=false,
-          title="PDM Visualization",
-          colormap=:coolwarm,
-          lowclip=:blue,
-          highclip=:red,
-          colorrange=(-1.0, 1.0),
-          markersize=30,
+        title="PDM Visualization",
+        colormap=:coolwarm,
+        lowclip=:blue,
+        highclip=:red,
+        colorrange=(-1.0, 1.0),
+        markersize=30,
     )
 end
 
 function Makie.plot!(plot::PDMPlot)
-    pdm = plot[1]    
+    pdm = plot[1]
     if length(plot) > 1
-    controls = plot[2]
-else
-    controls = zeros(Float64, num_actuators(pdm[]))
-end
+        controls = plot[2]
+    else
+        controls = zeros(Float64, num_actuators(pdm[]))
+    end
     colormap = plot[:colormap]
     markersize = plot[:markersize]
-    offset = @lift (0, - (max($markersize / 4.0, 6)))
+    offset = @lift (0, -(max($markersize / 4.0, 6)))
     colorrange = plot[:colorrange]
     lowclip = plot[:lowclip]
     highclip = plot[:highclip]
@@ -44,12 +44,18 @@ end
 
 
     # Plot actuators
-    scatter!(plot, x_coords, y_coords; markersize=markersize, color=controls, 
-    colormap = colormap, 
-    colorrange = colorrange,
-    lowclip = lowclip,
-    highclip = highclip,
-    label="Actuators")
+    scatter!(
+        plot,
+        x_coords,
+        y_coords;
+        markersize=markersize,
+        color=controls,
+        colormap=colormap,
+        colorrange=colorrange,
+        lowclip=lowclip,
+        highclip=highclip,
+        label="Actuators",
+    )
     ax = current_axis()
     ax.aspect = DataAspect()
 
@@ -59,7 +65,7 @@ end
         for (i, (x, y)) in enumerate(zip(x_coords, y_coords))
             text!(plot, x, y; text="$i", align=(:center, :top), color=:black, offset=offset)
         end
-    else 
+    else
         nothing
     end
 
@@ -87,13 +93,22 @@ end
     return plot
 end
 
-Colorbar(fig_or_scene, pl::PDMPlot; kwargs...) = Colorbar(fig_or_scene; colormap = pl.colormap, colorrange = pl.colorrange, highclip = pl.highclip, lowclip = pl.lowclip, kwargs...)
+Colorbar(fig_or_scene, pl::PDMPlot; kwargs...) = Colorbar(
+    fig_or_scene;
+    colormap=pl.colormap,
+    colorrange=pl.colorrange,
+    highclip=pl.highclip,
+    lowclip=pl.lowclip,
+    kwargs...,
+)
 
 # Define a plotting recipe for MMDM
-# 
-@recipe(MMDMPlot, mmdm #, controls
+#
+@recipe(
+    MMDMPlot,
+    mmdm #, controls
 ) do scene
-    Attributes(
+    Attributes(;
         show_numbers=false,
         title="MMDM Visualization",
         colormap=:coolwarm,
@@ -117,63 +132,73 @@ function Makie.plot!(plot::MMDMPlot)
     clip_low_color = plot[:clip_low_color][]
     clip_high_color = plot[:clip_high_color][]
     linewidth = plot[:linewidth][]
-    
+
     # Get the actuator polygons
     polygons = mmdm[].actuator_polygons
     # @show polygons
-    
+
     # Create axis with data aspect
     ax = current_axis()
     ax.aspect = DataAspect()
-    
+
     # Map control values to the defined range for coloring
     min_cl, max_cl = colorrange
     controls_clipped = clamp.(controls, min_cl, max_cl)
-    
+
     # Plot each actuator as a polygon with the control value as its color
     for (i, polygon) in enumerate(polygons)
-        poly!(plot, polygon; 
-            color=controls_clipped[i], 
-            colormap=colormap, 
+        poly!(
+            plot,
+            polygon;
+            color=controls_clipped[i],
+            colormap=colormap,
             colorrange=colorrange,
             strokewidth=linewidth,
-            strokecolor=:black)
+            strokecolor=:black,
+        )
     end
-    
+
     # # Highlight actuators that exceed limits
     low_idx = findall(<(min_cl), controls)
     high_idx = findall(>(max_cl), controls)
-    
+
     # Draw polygons with clip colors for out-of-range actuators
     for i in low_idx
-        poly!(ax, polygons[i]; 
+        poly!(
+            ax,
+            polygons[i];
             color=clip_low_color,
-            strokewidth=linewidth*1.5, 
-            strokecolor=:black)
+            strokewidth=linewidth * 1.5,
+            strokecolor=:black,
+        )
     end
-    
+
     for i in high_idx
-        poly!(ax, polygons[i]; 
+        poly!(
+            ax,
+            polygons[i];
             color=clip_high_color,
-            strokewidth=linewidth*1.5, 
-            strokecolor=:black)
+            strokewidth=linewidth * 1.5,
+            strokecolor=:black,
+        )
     end
-    
+
     # Optionally show actuator numbers
     if plot[:show_numbers][]
         for (i, polygon) in enumerate(polygons)
             # Get the polygon vertices
             points = polygon.exterior
-            
+
             # Calculate the centroid (average of all vertices)
             centroid_x = sum(p[1] for p in points) / length(points)
             centroid_y = sum(p[2] for p in points) / length(points)
-            
+
             # Draw the text with high contrast
-            text!(plot, 
-                [centroid_x], 
-                [centroid_y], 
-                text=["$i"], 
+            text!(
+                plot,
+                [centroid_x],
+                [centroid_y];
+                text=["$i"],
                 color=:black,
                 align=(:center, :center),
                 fontsize=14,
@@ -181,17 +206,14 @@ function Makie.plot!(plot::MMDMPlot)
             )
         end
     end
-    
+
     # Plot full aperture as a circle
     full_aperture_radius = mmdm[].full_aperture / 2.0
     circle_full = Circle(Point2(0.0, 0.0), full_aperture_radius)
     lines!(
-        ax, decompose(Point2, circle_full); 
-        color=:red, 
-        linewidth=2, 
-        label="Full Aperture"
+        ax, decompose(Point2, circle_full); color=:red, linewidth=2, label="Full Aperture"
     )
-    
+
     # Plot working aperture as a circle
     working_aperture_radius = working_aperture(mmdm[]) / 2.0
     circle_working = Circle(Point2(0.0, 0.0), working_aperture_radius)
@@ -202,16 +224,33 @@ function Makie.plot!(plot::MMDMPlot)
         linewidth=2,
         linestyle=:dash,
         label="Working Aperture",
-
     )
     translate!(waplines, 0, 0, 1)
-    
+
     axislegend(ax)
     return plot
 end
 
-Colorbar(fig_or_scene, pl::MMDMPlot; kwargs...) = Colorbar(fig_or_scene; colormap = pl.colormap, colorrange = pl.colorrange, highclip = pl.clip_high_color, lowclip = pl.clip_low_color, kwargs...)
+Colorbar(fig_or_scene, pl::MMDMPlot; kwargs...) = Colorbar(
+    fig_or_scene;
+    colormap=pl.colormap,
+    colorrange=pl.colorrange,
+    highclip=pl.clip_high_color,
+    lowclip=pl.clip_low_color,
+    kwargs...,
+)
 
-export pdmplot, pdmplot!, mmdmplot, mmdmplot!
+dmplot(pdm::PDM, controls=zeros(length(actuators(pdm))); kwargs...) =
+    pdmplot(pdm, controls; kwargs...)
+
+dmplot!(ax, pdm::PDM, controls=zeros(length(actuators(pdm))); kwargs...) =
+    pdmplot!(ax, pdm, controls; kwargs...)
+
+dmplot(mmdm::MMDM, controls=zeros(length(actuators(mmdm))); kwargs...) =
+    mmdmplot(mmdm, controls; kwargs...)
+dmplot!(ax, mmdm::MMDM, controls=zeros(length(actuators(mmdm))); kwargs...) =
+    mmdmplot!(ax, mmdm, controls; kwargs...)
+
+export pdmplot, pdmplot!, mmdmplot, mmdmplot!, dmplot, dmplot!
 
 end # module
