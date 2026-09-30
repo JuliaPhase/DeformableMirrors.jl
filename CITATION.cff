@@ -16,5 +16,5 @@ keywords:
   - "actuators"
   - "Julia"
 license: MIT
-repository-code: "https://github.com/olejorik/DeformableMirrors.jl"
+repository-code: "https://github.com/JuliaPhase/DeformableMirrors.jl"
 version: "0.1.0"

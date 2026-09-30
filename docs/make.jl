@@ -4,11 +4,11 @@ using Documenter
 makedocs(;
     modules=[DeformableMirrors],
     authors="Oleg Soloviev",
-    repo="https://github.com/olejorik/DeformableMirrors.jl/blob/{commit}{path}#L{line}",
+    repo="https://github.com/JuliaPhase/DeformableMirrors.jl/blob/{commit}{path}#L{line}",
     sitename="DeformableMirrors.jl",
     format=Documenter.HTML(;
         prettyurls=get(ENV, "CI", "false") == "true",
-        canonical="https://olejorik.github.io/DeformableMirrors.jl",
+        canonical="https://juliaphase.github.io/DeformableMirrors.jl",
         assets=String[],
     ),
     pages=[
@@ -17,5 +17,5 @@ makedocs(;
 )
 
 deploydocs(;
-    repo="github.com/olejorik/DeformableMirrors.jl",
+    repo="github.com/JuliaPhase/DeformableMirrors.jl",
 )
