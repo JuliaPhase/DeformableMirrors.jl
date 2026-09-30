@@ -1,5 +1,9 @@
 # DeformableMirrors
 
+Part of the [Phase.jl](https://github.com/JuliaPhase/Phase.jl) ecosystem.
+
+<!-- DOI badge: add after first Zenodo release -->
+
 [![Stable](https://img.shields.io/badge/docs-stable-blue.svg)](https://olejorik.github.io/DeformableMirrors.jl/stable)
 [![Dev](https://img.shields.io/badge/docs-dev-blue.svg)](https://olejorik.github.io/DeformableMirrors.jl/dev)
 [![Build Status](https://github.com/olejorik/DeformableMirrors.jl/workflows/CI/badge.svg)](https://github.com/olejorik/DeformableMirrors.jl/actions)
@@ -166,3 +170,9 @@ visualize_pdm_control(control_voltages, actuator_positions; colormap=:viridis)
 actuator_polygons = [Polygon(...) for i in 1:37]  # Define actuator polygons
 control_voltages = randn(37)  # Random voltages
 visualize_mmdm_control(control_voltages, actuator_polygons; colormap=:coolwarm)
+
+## Funding
+
+This work has received funding from the Chips Joint Undertaking (JU) under grant agreement No 101111948 (14AMI). The JU receives support from the European Union's Horizon Europe research and innovation programme. The project is supported by the Chips Joint Undertaking and its members including the top-up funding by RVO (The Netherlands Enterprise Agency).
+
+<img src="docs/src/assets/funding/Chips-JU.png" alt="Chips Joint Undertaking, co-funded by the European Union" height="60">

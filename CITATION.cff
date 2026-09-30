@@ -1,0 +1,20 @@
+cff-version: 1.2.0
+title: "DeformableMirrors.jl"
+message: "If you use this software, please cite it using the metadata from this file."
+type: software
+authors:
+  - family-names: "Soloviev"
+    given-names: "Oleg"
+    email: "oleg.soloviev@gmail.com"
+    orcid: "https://orcid.org/0000-0003-3761-9192"
+    affiliation: "Flexible Optical B.V. (OKO Technologies)"
+abstract: "Julia types and utilities to describe deformable mirrors for adaptive optics (piezoelectric PDM and micro-machined MMDM), their actuator layouts and apertures, with Makie-based visualisation."
+keywords:
+  - "deformable mirror"
+  - "adaptive optics"
+  - "wavefront"
+  - "actuators"
+  - "Julia"
+license: MIT
+repository-code: "https://github.com/olejorik/DeformableMirrors.jl"
+version: "0.1.0"

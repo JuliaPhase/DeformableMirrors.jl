@@ -1,6 +1,6 @@
 name = "DeformableMirrors"
 uuid = "1974dd6c-e1e0-4652-a3c9-2f0e18898c7e"
-authors = ["Oleg Soloviev"]
+authors = ["Oleg Soloviev <oleg.soloviev@gmail.com> and contributors"]
 version = "0.1.0"
 
 [deps]
